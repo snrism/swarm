@@ -10,10 +10,11 @@ The `Docker Swarm` scheduler comes with multiple filters.
 
 These filters are used to schedule containers on a subset of nodes.
 
-`Docker Swarm` currently supports 4 filters:
+`Docker Swarm` currently supports 5 filters:
 * [Constraint](#constraint-filter)
 * [Affinity](#affinity-filter)
 * [Port](#port-filter)
+* [Dependency] (#dependency-filter)
 * [Health](#health-filter)
 
 You can choose the filter(s) you want to use with the `--filter` flag of `swarm manage`
