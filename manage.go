@@ -124,7 +124,7 @@ func manage(c *cli.Context) {
 		TLSConfig:       tlsConfig,
 		OvercommitRatio: c.Float64("overcommit"),
 		Discovery:       dflag,
-		Heartbeat:       c.Int("heartbeat"),
+		Heartbeat:       uint64("heartbeat"),
 	}
 
 	cluster := swarm.NewCluster(sched, store, eventsHandler, options)

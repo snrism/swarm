@@ -2,6 +2,7 @@ package main
 
 import (
 	"regexp"
+	"strconv"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -20,7 +21,16 @@ func join(c *cli.Context) {
 		log.Fatalf("discovery required to join a cluster. See '%s join --help'.", c.App.Name)
 	}
 
-	d, err := discovery.New(dflag, c.Int("heartbeat"))
+	hb, err := strconv.ParseUint("heartbeat", 0, 32)
+	if err != nil {
+		log.Fatal("--heartbeat should be an unsigned integer")
+	}
+
+	if hb < 1 {
+		log.Fatal("--heartbeat value should be greater than 0")
+	}
+
+	d, err := discovery.New(dflag, hb)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,10 +45,10 @@ func join(c *cli.Context) {
 		log.Fatal(err)
 	}
 
-	hb := time.Duration(c.Int("heartbeat"))
+	hbval := time.Duration(hb)
 	for {
-		log.WithFields(log.Fields{"addr": addr, "discovery": dflag}).Infof("Registering on the discovery service every %d seconds...", hb)
-		time.Sleep(hb * time.Second)
+		log.WithFields(log.Fields{"addr": addr, "discovery": dflag}).Infof("Registering on the discovery service every %d seconds...", hbval)
+		time.Sleep(hbval * time.Second)
 		if err := d.Register(addr); err != nil {
 			log.Error(err)
 		}
